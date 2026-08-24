@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 — Native Crystal support with conservative story safety
+
+Shedinja now supports **native Pokémon Crystal** on Gen1Recomp `0.2.24` and later. Crystal uses the established shared Gen 2 implementation: internal species slot 252 and visible National Dex #292; Bug/Ghost split stats; strict 1-HP repair for saves, gifts, catches, level-ups, wild enemies, and switched-in opponents; normal/shiny palette rows; party icon; three-frame front animation; static back sprite; Pokédex injection; scoped Wonder Guard; Electric Tera Orb; Air Balloon; and the held-`WONDER_GUARD` wild-encounter gate.
+
+Crystal’s source data confirms an Elm Lab five–Poké Ball helper, but its top-level scene context differs from Gold/Silver and has not yet been verified with a live Crystal hook contract. The optional post-Mystery-Egg rift reward is therefore **disabled only on native Crystal** rather than risk awarding Shedinja from an unrelated item command. Gold and Silver retain the existing rift scene and level-5 Shedinja holding `WONDER_GUARD`; all other Crystal core behavior is active. The reward can be added after an in-game Crystal script-context test establishes the definitive parent key.
+
+The release adds a Crystal entry test and a full native Crystal content regression. The latter verifies Crystal runtime routing, core registry data, #292 Pokédex entry, normal and shiny palettes, animation, strict HP behavior, battle-only items, encounter gate, Wonder Guard, and the intentional absence of the unverified rift hook. The complete existing suite, Crystal 251 compatibility, current-engine manifest validation, Lua compilation, and asset checks pass. No Crystal ROM data or assets are bundled.
+
 ## 0.3.6 — Legal generation-specific move data and Gen1Recomp 0.2.15 validation
 
 This update corrects two root-cause content errors exposed by loading Shedinja through the complete current game datasets. Red, Blue, and Yellow do not define **SPITE**, because it is a Generation II move; Shedinja’s Gen 1 level-25 slot now uses the legal Generation I Ghost move **NIGHT SHADE**. Gold and Silver do not define **GRUDGE**, because it is a Generation III move; Shedinja’s Gen 2 level-45 slot now uses the legal Generation II Ghost move **DESTINY BOND**. The Gold/Silver **SPITE** slot remains unchanged because it is legal there.

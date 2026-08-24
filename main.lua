@@ -196,14 +196,21 @@ end
 
 local playing = GameVersion.get()
 if GameVersion.generation(playing) == 2 then
-  -- Gold and Silver share this Gen 2 schema, palette, held-item, and encounter
-  -- implementation. Keep it isolated so the Gen 1 branch below is never
+  -- Gold, Silver, and Crystal share this Gen 2 schema, palette, held-item, and
+  -- encounter implementation. Keep it isolated so the Gen 1 branch below is never
   -- registered or modified during a Gen 2 boot. API 2 publishes the
   -- mutable mod.exports table, so copy the installer handles into it rather
   -- than returning a table the loader intentionally ignores.
-  local goldExports = require("mods.shedinja.gold").install(
-    mod, SHEDINJA, WONDER_GUARD, ELEC_TERA_ORB, AIR_BALLOON)
-  for key, value in pairs(goldExports or {}) do mod.exports[key] = value end
+  local engine = type(GameVersion.engine) == "function" and GameVersion.engine(playing) or nil
+  local gen2Exports = require("mods.shedinja.gold").install(
+    mod, SHEDINJA, WONDER_GUARD, ELEC_TERA_ORB, AIR_BALLOON, {
+      -- Crystal’s known five-ball subscript is source-verified, but its enclosing
+      -- scene context is not yet an in-game-tested hook contract. Leave only this
+      -- optional rift reward off until that boundary is verified; core Gen 2
+      -- Shedinja behavior remains enabled.
+      enableElmReward = engine ~= "crystal",
+    })
+  for key, value in pairs(gen2Exports or {}) do mod.exports[key] = value end
   return mod.exports
 end
 

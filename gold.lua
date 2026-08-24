@@ -1,11 +1,11 @@
 -- Gold-specific content for the standalone Shedinja package.
 --
 -- This module deliberately contains no Gen 1 registration or state changes.
--- Gold has a distinct species schema, a held-item system, and a GBC palette
+-- Gen 2 has a distinct species schema, a held-item system, and a GBC palette
 -- renderer, so keeping its work here prevents either generation from leaking
 -- into the other.
 
-local Gold = {}
+local Gen2 = {}
 
 local FRONT_FRAMES = {
   "assets/gen2/shedinja_front_1.png",
@@ -108,6 +108,7 @@ local function normalizeSaveShedinjaHp(save, speciesId)
   return changed
 end
 
+-- Retain the original persisted key so existing Gold/Silver reward state stays valid.
 local ELM_REWARD_KEY = "gold_elm_shedinja_reward_claimed"
 
 local function ownsWonderGuardShedinja(save, speciesId, itemId)
@@ -195,8 +196,9 @@ local function queueElmReward(mod, game, speciesId, itemId)
   return true
 end
 
-function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
-  -- Gold contains the four original Gen 2 experience curves only. Shedinja's
+function Gen2.install(mod, speciesId, itemId, teraItemId, balloonItemId, config)
+  local enableElmReward = not (config and config.enableElmReward == false)
+  -- Native Gen 2 contains the four original experience curves only. Shedinja's
   -- Gen III Erratic curve is supplied as a small local registry record rather
   -- than silently falling back to Medium Fast.
   mod.content.growth_rates:register("ERRATIC", {
@@ -205,7 +207,7 @@ function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
     end,
   })
 
-  -- Shedinja occupies the first free internal Gold species index. Its public
+  -- Shedinja occupies the first free internal Gen 2 species index. Its public
   -- National Dex number remains 292, matching the Gen 1 branch and all later
   -- official games.
   mod.content.constants:patch("dexSize", 292)
@@ -227,7 +229,7 @@ function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
     baseExp = 95,
     growthRate = "ERRATIC",
     picSize = 6,
-    -- Static Gold screens (Elm's pokepic preview, Summary, and trades) load
+    -- Static Gen 2 screens (Elm's pokepic preview, Summary, and trades) load
     -- these fields directly and do not invoke pokemon.sprite. Use mounted
     -- absolute asset paths here; the battle hook below only replaces the front
     -- path with time-indexed frames during battle.
@@ -254,7 +256,7 @@ function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
     genderRatio = 255,
   })
 
-  -- Gold's party list uses a dedicated 16x32 two-frame icon sheet rather
+  -- The Gen 2 party list uses a dedicated 16x32 two-frame icon sheet rather
   -- than a battle or summary sprite. Register the static Shedinja icon before
   -- associating it with the species so party, PC, and selection menus do not
   -- fall back to an empty slot.
@@ -266,14 +268,14 @@ function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
   })
   mod.content.icons:override(speciesId, ICON_ID)
 
-  -- The PNG frames are four grayscale source shades. Gold's sprite renderer
+  -- The PNG frames are four grayscale source shades. The Gen 2 sprite renderer
   -- applies one of these registered palette rows at draw time, so shininess
   -- follows the actual mon.shiny flag without separate shiny art files.
   mod.content.palettes:patch("pokemon", {
     [speciesId] = { normal = NORMAL_PALETTE, shiny = SHINY_PALETTE },
   })
 
-  -- The native bag must be able to offer GIVE. In Gold, non-tossable items are
+  -- The native bag must be able to offer GIVE. In Gen 2, non-tossable items are
   -- key-item-style rows and intentionally never offer it, so Wonder Guard is a
   -- non-usable normal item that the player may give, take, or discard.
   mod.content.items:register(itemId, {
@@ -312,7 +314,7 @@ function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
   mod.hooks:wrap("pokemon.sprite", function(next, path, ctx)
     if ctx and ctx.kind == "battle" and ctx.species == speciesId and ctx.side == "front" then
       local mon = ctx.mon
-      -- Gold battle contexts always carry the battler's mon. Keep the fallback
+      -- Gen 2 battle contexts always carry the battler's mon. Keep the fallback
       -- defensive for future callers that may ask for a battle-front path
       -- before a battler has been constructed.
       if type(mon) ~= "table" then
@@ -351,7 +353,7 @@ function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
     injectDexEntry(game, speciesId)
   end)
 
-  -- Gold's ordinary monster constructor is intentionally shared by all
+  -- Gen 2's ordinary monster constructor is intentionally shared by all
   -- species, so it cannot encode Shedinja's special one-HP rule. These
   -- post-construction boundaries cover wild catches, link/trade receipts,
   -- level-up stat refreshes, and scripted gifts such as an Elm starter.
@@ -361,7 +363,7 @@ function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
     mod.events:on(eventName, normalizeEvent)
   end
 
-  -- `Mon.new` applies the ordinary Gold stat formula before Battle exposes an
+  -- `Mon.new` applies the ordinary Gen 2 stat formula before Battle exposes an
   -- enemy. Repair the live opponent after construction and again on a trainer
   -- send-out. The Gold battle object stores mons directly, while the shared
   -- event shape may carry a battler wrapper on other generations.
@@ -381,6 +383,12 @@ function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
   -- command succeeds, wait for its script to complete before presenting the
   -- rift scene and gifting the held-item Shedinja. This deliberately avoids
   -- replacing the native story script or triggering from an unrelated ball.
+  --
+  -- Crystal keeps the five-ball reward but its scene-script nesting and event
+  -- values differ from Gold/Silver. Until its parent runtime context is covered
+  -- by an in-game contract test, native Crystal leaves this optional bonus off
+  -- rather than risk firing on an unrelated item command.
+  if enableElmReward then
   mod.hooks:wrap("script.command", function(next, ctx, name, args, cmd)
     local result = next(ctx, name, args, cmd)
     local game = mod.game
@@ -408,6 +416,7 @@ function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
       if ev.completed then queueElmReward(mod, mod.game, speciesId, itemId) end
     end
   end)
+  end
 
   return {
     SHEDINJA = speciesId,
@@ -426,4 +435,4 @@ function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
   }
 end
 
-return Gold
+return Gen2

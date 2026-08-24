@@ -1,6 +1,12 @@
 # Shedinja for Gen1Recomp
 
-**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, strict one-HP behavior across every lifecycle path, generation-appropriate wild encounters, a deliberately scoped Wonder Guard implementation, and two optional temporary battle mechanics for the player’s active Shedinja. Version **0.3.4** uses the consistent package ID **`shedinja`** and provides one optional compatibility bridge for Crystal 251 in R/B/Y or Expanded Species in Gold, while preserving standalone behavior in every supported game.
+**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, Gold, Silver, and Crystal**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, strict one-HP behavior across every lifecycle path, generation-appropriate wild encounters, a deliberately scoped Wonder Guard implementation, and two optional temporary battle mechanics for the player’s active Shedinja. Version **0.4.0** uses the stable package ID **`shedinja`**, supports native Crystal on Gen1Recomp `0.2.24` or later, and remains standalone in every supported game.
+
+## Version 0.4.0 native Crystal support
+
+Crystal uses the shared Gen 2 species registration, strict one-HP normalization, National Dex #292 entry, normal and shiny palette data, party icon, front animation, static back sprite, Wonder Guard behavior, Electric Tera Orb, Air Balloon, and held-item route gate. The complete Crystal regression executes those paths with the official `crystal` runtime identifier; it includes no Crystal ROM data or assets.
+
+Crystal’s post-Mystery-Egg story has a verified native five–Poké Ball helper but different enclosing scene-script paths from Gold and Silver. To avoid attaching a reward to the wrong script context, **only the optional Elm rift reward is disabled in native Crystal for this release**. Gold and Silver keep the established rift scene and level-5 Shedinja holding `WONDER_GUARD`. Crystal players can still obtain Shedinja through the documented Gen 2 routes and Starter Picker, then use the same held-item route gate. This boundary will be revisited only after a live Crystal script-context test confirms the definitive event path.
 
 ## Version 0.3.4 Gen 1 front/back roles, encounters, and Wonder Guard
 
@@ -27,64 +33,64 @@ Shedinja now also receives mandatory Gen 1 HP normalization. A living Shedinja i
 | Game | Internal species slot | National Dex number | Battle art | Wonder Guard model |
 |---|---:|---:|---|---|
 | Red / Blue / Yellow | 152 standalone; 252 with active Crystal 251 | 292 | Transparent Gen 1-style front and back sprites | The Bag token activates Wonder Guard for every active Shedinja on either side of battle. |
-| Gold / Silver | 252 | 292 | Credited Crystal-style three-frame front animation, static back sprite, normal palette, and shiny palette | Enemy Shedinja receives the species behavior intrinsically; the player’s active Shedinja needs to hold `WONDER_GUARD`. |
+| Gold / Silver / Crystal | 252 | 292 | Credited Crystal-style three-frame front animation, static back sprite, normal palette, and shiny palette | Enemy Shedinja receives the species behavior intrinsically; the player’s active Shedinja needs to hold `WONDER_GUARD`. |
 
-Both generations also grant `ELEC TERA ORB` and `AIR BALLOON` as permanent battle-only options for the player’s active Shedinja. They do not grant Wonder Guard by themselves in Gold or Silver.
+Both generations also grant `ELEC TERA ORB` and `AIR BALLOON` as permanent battle-only options for the player’s active Shedinja. They do not grant Wonder Guard by themselves in Gold, Silver, or Crystal.
 
-> **Important:** In Gold and Silver, `WONDER_GUARD` is a normal non-usable Bag item so that the native Gen 2 **GIVE** action can equip it. It is no longer granted at boot. After the Mystery Egg return, Elm’s assistant gives the native five Poké Balls and then a level-5 Shedinja already holding the item.
+> **Important:** In Gold, Silver, and Crystal, `WONDER_GUARD` is a normal non-usable Bag item so that the native Gen 2 **GIVE** action can equip it. It is no longer granted at boot. In Gold and Silver, the post-Mystery-Egg Elm reward then supplies a level-5 Shedinja already holding the item. Native Crystal intentionally does not attach that optional rift reward until its enclosing story-script context is confirmed in live testing.
 
 ## Core behavior
 
-Shedinja is Bug/Ghost with base stats of HP 1, Attack 90, Defense 45, Speed 40, Special Attack 30, and Special Defense 30 in Gold and Silver. Both Gen 2 games use the Erratic experience curve, an `EGG_MINERAL` breeding group, and the following level-up moves: Scratch, Harden, Leech Life, Sand Attack, Fury Swipes, Mind Reader, Spite, Confuse Ray, Shadow Ball, and Grudge.
+Shedinja is Bug/Ghost with base stats of HP 1, Attack 90, Defense 45, Speed 40, Special Attack 30, and Special Defense 30 in Gold, Silver, and Crystal. All three native Gen 2 games use the Erratic experience curve, an `EGG_MINERAL` breeding group, and the following level-up moves: Scratch, Harden, Leech Life, Sand Attack, Fury Swipes, Mind Reader, Spite, Confuse Ray, Shadow Ball, and Destiny Bond.
 
-Wonder Guard uses the game’s normal type-effectiveness result and blocks direct, non-super-effective move damage. In Red, Blue, and Yellow, the persistent `WONDER_GUARD` Bag token activates it for **every active Shedinja**, including the player’s, wild Shedinja, and trainer-owned Shedinja. In Gold and Silver, enemy Shedinja receives the ordinary-damage protection intrinsically, while the player’s active Shedinja additionally requires the actual held `WONDER_GUARD` item. In both generations it never protects another species, an inactive party member, or typeless self-damage such as confusion.
+Wonder Guard uses the game’s normal type-effectiveness result and blocks direct, non-super-effective move damage. In Red, Blue, and Yellow, the persistent `WONDER_GUARD` Bag token activates it for **every active Shedinja**, including the player’s, wild Shedinja, and trainer-owned Shedinja. In Gold, Silver, and Crystal, enemy Shedinja receives the ordinary-damage protection intrinsically, while the player’s active Shedinja additionally requires the actual held `WONDER_GUARD` item. In both generations it never protects another species, an inactive party member, or typeless self-damage such as confusion.
 
 Gen 1 preserves Shedinja’s isolated recreation of unused Gen 1 cry `$43`: base cry `0`, pitch `128`, and length `16`. The cry is species-scoped and does not change Nidoran♂ or any global cry data.
 
 ## Electric Tera Orb and Air Balloon
 
-`ELEC TERA ORB` and `AIR BALLOON` are permanent, non-tossable items automatically added to every save and restored if missing on a later load. In Red, Blue, and Yellow they are Bag items; in Gold and Silver they are Key Items. They can be selected only during battle and only while the player’s active Pokémon is Shedinja. A successful activation is free: it returns to the battle command menu without consuming the turn, so the player can activate one or both items and then choose a normal action.
+`ELEC TERA ORB` and `AIR BALLOON` are permanent, non-tossable items automatically added to every save and restored if missing on a later load. In Red, Blue, and Yellow they are Bag items; in Gold, Silver, and Crystal they are Key Items. They can be selected only during battle and only while the player’s active Pokémon is Shedinja. A successful activation is free: it returns to the battle command menu without consuming the turn, so the player can activate one or both items and then choose a normal action.
 
 The Orb temporarily applies **Electric** as the active player Shedinja’s defensive type. The Balloon causes Ground-type moves to miss before they deal damage. Each item can activate once per time that Shedinja is on the field. Both effects clear on switch-out, forced replacement, faint-driven replacement, and battle end; switching the same Shedinja back in permits a new activation. Enemy, wild, benched, and boxed Shedinja never receive either effect.
 
 > **Gen 2 boundary:** The Orb changes the defensive typing used by the player’s existing held-item Wonder Guard. It does **not** bypass the requirement that the player’s active Shedinja hold `WONDER_GUARD`, and it does not activate the Gen 2 conditional wild encounter routes. Gen 2 enemy Shedinja behavior remains intrinsic and separate.
 
-Indirect and typeless damage remains dangerous. Poison, Toxic, burn, Leech Seed, and confusion self-damage still matter in Gen 1; Gold and Silver additionally retain their native indirect counterplay, including Sandstorm and Spikes.
+Indirect and typeless damage remains dangerous. Poison, Toxic, burn, Leech Seed, and confusion self-damage still matter in Gen 1; Gold, Silver, and Crystal additionally retain their native indirect counterplay, including Sandstorm and Spikes.
 
 ## Wild encounter locations
 
-The mod locally transforms only a small percentage of valid native land encounters. It does not replace native encounter rates, non-Shedinja slots, fishing, or water encounters. In Gold and Silver, the listed Shedinja replacements are active only while at least one owned Shedinja—either in the party or in a PC box—is holding `WONDER_GUARD`.
+The mod locally transforms only a small percentage of valid native land encounters. It does not replace native encounter rates, non-Shedinja slots, fishing, or water encounters. In Gold, Silver, and Crystal, the listed Shedinja replacements are active only while at least one owned Shedinja—either in the party or in a PC box—is holding `WONDER_GUARD`.
 
 | Game | Location | Encounter path | Chance | Level range |
 |---|---|---|---:|---:|
 | Red / Blue / Yellow | Route 1 | Grass | 5% | 3–5 |
 | Red / Blue / Yellow | Route 4 | Grass | 7% | 10–12 |
 | Red / Blue / Yellow | Victory Road 1F, 2F, and 3F | Cave / indoor | 10% | 36–38 |
-| Gold / Silver | Route 29 | Land | 5% | 3–5 |
-| Gold / Silver | Route 34 | Land | 7% | 10–12 |
-| Gold / Silver | Victory Road | Land / cave | 10% | 36–38 |
+| Gold / Silver / Crystal | Route 29 | Land | 5% | 3–5 |
+| Gold / Silver / Crystal | Route 34 | Land | 7% | 10–12 |
+| Gold / Silver / Crystal | Victory Road | Land / cave | 10% | 36–38 |
 
 ## Gen 2 rift reward and encounter progression
 
-After the player returns the Mystery Egg to Professor Elm, the assistant’s normal five Poké Ball reward is left intact. Once that native reward completes, the assistant explains that a rift opened while Elm was dealing with the robbery and gives a level-5 Shedinja already holding `WONDER_GUARD`.
+After the player returns the Mystery Egg to Professor Elm in Gold or Silver, the assistant’s normal five Poké Ball reward is left intact. Once that native reward completes, the assistant explains that a rift opened while Elm was dealing with the robbery and gives a level-5 Shedinja already holding `WONDER_GUARD`. Native Crystal preserves its five Poké Ball story reward but does **not** run this optional rift scene in v0.4.0, because the parent script context has not yet been confirmed by an in-game Crystal contract test.
 
-The Gen 2 wild Shedinja replacements are deliberately tied to that held item. The route gate is on only while a Shedinja in the party or any PC box is holding it. Taking the item away from every owned Shedinja restores the normal encounter tables immediately; giving the item to a non-Shedinja does not activate the routes. Already-caught Shedinja are never removed.
+The native Gen 2 wild Shedinja replacements are deliberately tied to that held item. The route gate is on only while a Shedinja in the party or any PC box is holding it. Taking the item away from every owned Shedinja restores the normal encounter tables immediately; giving the item to a non-Shedinja does not activate the routes. Already-caught Shedinja are never removed.
 
 ## Gen 2 sprite, shiny, and Pokédex support
 
 The Gen 2 front sprite plays the three supplied Crystal animation frames once when Shedinja appears in battle, using the original 6/32/10-tick timing and then holding the final frame. Its back sprite remains static, matching the supplied Crystal source data. The art is stored as four palette-indexed grayscale shades; Gen1Recomp automatically selects the included normal or shiny palette from the Pokémon’s actual shiny state.
 
-Gold and Silver insert a Shedinja entry into their `gen2Pokedex` data at game-ready time, allowing National Dex #292, height, weight, and a correctly fitted two-page entry to appear without replacing a native species entry.
+Gold, Silver, and Crystal insert a Shedinja entry into their `gen2Pokedex` data at game-ready time, allowing National Dex #292, height, weight, and a correctly fitted two-page entry to appear without replacing a native species entry.
 
 ## Installation and package migration
 
-Install the current `shedinja-0.3.5.zip` release through your index or from GitHub Releases. The retired package identity was the misspelled `shedninja`; because Gen1Recomp treats the corrected `shedinja` package as a distinct mod, remove the old `shedninja` install and then install `shedinja` once. Future releases update normally through the launcher.
+Install the current `shedinja-0.4.0.zip` release through your index or from GitHub Releases. The retired package identity was the misspelled `shedninja`; because Gen1Recomp treats the corrected `shedinja` package as a distinct mod, remove the old `shedninja` install and then install `shedinja` once. Future releases update normally through the launcher.
 
 ## Compatibility
 
 This mod is designed to coexist with the user’s non-roster gameplay mods, including Starter Picker, Item Randomizer, Gym Leader Shuffle, Randomized Gym Challenge, and Sound Effect Replacer. It is standalone: none of those mods is required for Shedinja to load, appear, receive Wonder Guard, or display its Dex content.
 
-> **Roster-expansion guidance:** Use the single [Shedinja Compatibility Bridge](https://github.com/inmento/Shedinja-Expanded-Bridge/releases) with core Shedinja 0.3.0+ when either supported framework is active. In Red, Blue, or Yellow with Crystal 251, it moves Shedinja to internal index `252`, retains National Dex #292, and supplies Crystal split-stat metadata. In Gold or Silver with Expanded Species, it preserves Shedinja’s framework-aware #292 identity and presentation. **Kanto Reforged** and unrelated roster/Dex/index-overhaul mods remain unsupported unless they provide their own dedicated compatibility bridge.
+> **Roster-expansion guidance:** Use the single [Shedinja Compatibility Bridge](https://github.com/inmento/Shedinja-Expanded-Bridge/releases) with core Shedinja 0.3.0+ when either supported framework is active. In Red, Blue, or Yellow with Crystal 251, it moves Shedinja to internal index `252`, retains National Dex #292, and supplies Crystal split-stat metadata. In Gold, Silver, or native Crystal with Expanded Species, it preserves Shedinja’s framework-aware #292 identity and presentation. **Kanto Reforged** and unrelated roster/Dex/index-overhaul mods remain unsupported unless they provide their own dedicated compatibility bridge.
 
 Gym Leader Shuffle and Randomized Gym Challenge remain mutually exclusive with each other because they edit the same gym content, but either may be used with Shedinja when enabled alone.
 
@@ -94,7 +100,7 @@ Confirm that the mod boots, Shedinja appears at the stated locations, and native
 
 For Gen 1, confirm that `WONDER_GUARD`, `ELEC TERA ORB`, and `AIR BALLOON` appear in the Bag. With player Shedinja active, activate the Orb, Balloon, and both in either order; confirm no activation consumes the turn, duplicate use refuses, Ground moves miss while the Balloon is active, and both temporary effects clear after switching out and return only when reactivated. Test neutral, resisted, super-effective, status, fixed-damage, and confusion damage against both player and enemy Shedinja.
 
-For Gold and Silver, confirm the two new items appear in Key Items while `WONDER_GUARD` remains a normal Bag item. Return the Mystery Egg to Elm, confirm the assistant’s native five Poké Balls are retained, then confirm the rift scene gives a level-5 Shedinja holding `WONDER_GUARD`. Test the Orb and Balloon on that active held-item Shedinja, then repeat after taking `WONDER_GUARD` away to confirm the Orb does not bypass the held-item rule. Move `WONDER_GUARD` between a party Shedinja, a boxed Shedinja, and another species to verify the Route 29, Route 34, and Victory Road encounter gate responds immediately. Also check normal and shiny art if a shiny Shedinja is available, the one-pass front animation, the static back art, and the two-page Gen 2 Pokédex entry.
+For Gold and Silver, confirm the two new items appear in Key Items while `WONDER_GUARD` remains a normal Bag item. Return the Mystery Egg to Elm, confirm the assistant’s native five Poké Balls are retained, then confirm the rift scene gives a level-5 Shedinja holding `WONDER_GUARD`. For native Crystal, confirm its regular five Poké Ball story sequence remains unchanged and do not expect the optional rift scene in v0.4.0. In all three Gen 2 games, test the Orb and Balloon on an active held-item Shedinja, then repeat after taking `WONDER_GUARD` away to confirm the Orb does not bypass the held-item rule. Move `WONDER_GUARD` between a party Shedinja, a boxed Shedinja, and another species to verify the Route 29, Route 34, and Victory Road encounter gate responds immediately. Also check normal and shiny art if a shiny Shedinja is available, the one-pass front animation, the static back art, and the two-page Gen 2 Pokédex entry.
 
 ## Artwork attribution and licenses
 
@@ -104,4 +110,4 @@ See [CREDITS.md](CREDITS.md) for the complete source links, attribution details,
 
 ## Scope and status
 
-This is a public **0.3.5** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, starter, and battle-behavior results before further species or progression mechanics are added.
+This is a public **0.4.0** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, starter, and battle-behavior results before further species or progression mechanics are added.

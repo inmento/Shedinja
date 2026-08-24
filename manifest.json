@@ -1,7 +1,7 @@
 {
   "id": "shedinja",
   "name": "Shedinja",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "github": "inmento/Shedinja",
   "api": 2,
   "entry": "main.lua",
@@ -22,10 +22,10 @@
       "github": "Deftones565/gen1recomp-mod-crystal-251"
     }
   ],
-  "game_version": ">=0.2.3 <1.0.0",
+  "game_version": ">=0.2.24 <1.0.0",
   "incompatible": [
     "Kanto-Reforged"
   ],
   "affects_link": true,
-  "description": "Standalone Shedinja expansion for Red/Blue/Yellow, Gold, and Silver: National Dex #292, scoped Wonder Guard, free Shedinja-only Electric Tera Orb and Air Balloon battle options, Gen 2 rift progression and held-item route gate, credited Gen 1/animated Gen 2 art, legal generation-specific level-up moves, plus one optional compatibility bridge."
+  "description": "Standalone Shedinja expansion for Red/Blue/Yellow, Gold, Silver, and Crystal: National Dex #292, scoped Wonder Guard, free Shedinja-only Electric Tera Orb and Air Balloon battle options, shared Gen 2 held-item route gate, credited Gen 1/animated Gen 2 art, legal generation-specific level-up moves, plus optional framework compatibility."
 }
