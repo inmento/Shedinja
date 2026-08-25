@@ -1,7 +1,7 @@
 {
   "id": "shedinja",
   "name": "Shedinja",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "github": "inmento/Shedinja",
   "api": 2,
   "entry": "main.lua",
@@ -18,11 +18,13 @@
     {
       "id": "CRYSTAL_251",
       "range": ">=0.11.3 <1.0.0",
-      "games": ["gen1"],
+      "games": [
+        "gen1"
+      ],
       "github": "Deftones565/gen1recomp-mod-crystal-251"
     }
   ],
-  "game_version": ">=0.2.24 <1.0.0",
+  "game_version": ">=0.2.18 <1.0.0",
   "incompatible": [
     "Kanto-Reforged"
   ],
