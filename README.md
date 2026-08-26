@@ -111,3 +111,7 @@ See [CREDITS.md](CREDITS.md) for the complete source links, attribution details,
 ## Scope and status
 
 This is a public **0.4.0** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, starter, and battle-behavior results before further species or progression mechanics are added.
+
+## License
+
+Unless a file or third-party notice says otherwise, this repository's original source code, configuration, tests, and documentation are licensed under the [MIT License](LICENSE). Read [LICENSE_SCOPE.md](LICENSE_SCOPE.md) for attribution guidance and third-party, asset, user-supplied-source, and game-IP boundaries.
