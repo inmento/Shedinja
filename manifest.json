@@ -24,7 +24,7 @@
       "github": "Deftones565/gen1recomp-mod-crystal-251"
     }
   ],
-  "game_version": ">=0.3.51 <1.0.0",
+  "game_version": ">=0.3.57 <1.0.0",
   "incompatible": [
     "Kanto-Reforged"
   ],
